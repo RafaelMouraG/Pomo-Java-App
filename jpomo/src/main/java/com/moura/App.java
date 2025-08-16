@@ -26,18 +26,17 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // 1. Encontra e carrega o arquivo FXML que define a nossa interface.
-            // O getResource procura o arquivo dentro da pasta 'resources'.
-            // Usamos Objects.requireNonNull para garantir que o recurso não seja nulo,
-            // o que nos dará uma mensagem de erro mais clara (NullPointerException) se o arquivo não for encontrado.
-            URL fxmlUrl = getClass().getResource("/com/moura/jpomo/PomodoroView.fxml");
+            // 1. Encontra e carrega o arquivo FXML.
+            // O caminho foi CORRIGIDO para incluir a pasta 'view'.
+            URL fxmlUrl = App.class.getClassLoader().getResource("com/moura/jpomo/view/PomodoroView.fxml");
             Parent root = FXMLLoader.load(Objects.requireNonNull(fxmlUrl));
 
             // 2. Cria uma "cena" com o conteúdo carregado do FXML.
             Scene scene = new Scene(root);
 
             // 3. (Opcional) Carrega a folha de estilos CSS.
-            URL cssUrl = getClass().getResource("/com/moura/jpomo/styles.css");
+            // O caminho também foi corrigido aqui para consistência, assumindo que o CSS também estará na pasta 'view'.
+            URL cssUrl = App.class.getClassLoader().getResource("com/moura/jpomo/view/styles.css");
             if (cssUrl != null) {
                 scene.getStylesheets().add(cssUrl.toExternalForm());
             } else {
@@ -56,7 +55,9 @@ public class App extends Application {
             e.printStackTrace();
         } catch (NullPointerException e) {
             // Este erro será lançado se o getResource retornar null.
-            System.err.println("Erro Crítico: Não foi possível encontrar o arquivo FXML. Verifique se o caminho '/com/moura/jpomo/PomodoroView.fxml' está correto e se a pasta 'resources' está configurada como uma pasta de recursos do Maven.");
+            System.err.println("Erro Crítico: Não foi possível encontrar o arquivo FXML ou CSS.");
+            System.err.println("Verifique se os caminhos 'com/moura/jpomo/view/PomodoroView.fxml' e 'com/moura/jpomo/view/styles.css' existem dentro da pasta 'src/main/resources'.");
+            System.err.println("Tente rodar 'mvn clean install' e depois 'mvn javafx:run' novamente.");
             e.printStackTrace();
         }
     }
