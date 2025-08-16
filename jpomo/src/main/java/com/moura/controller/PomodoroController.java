@@ -1,85 +1,169 @@
 package com.moura.controller;
 
+import com.moura.model.FocusSession;
 import com.moura.model.Settings;
+import com.moura.model.TimerState;
 import com.moura.service.NotificationService;
+import com.moura.service.SettingsService;
 import com.moura.service.TimerService;
+import com.moura.service.TrackingService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
+
 
 public class PomodoroController {
 
     @FXML
     private Label statusLabel;
-
     @FXML
     private Label timerLabel;
-
     @FXML
     private Button startButton;
-
     @FXML
     private Button pauseButton;
-
     @FXML
     private Button resetButton;
+    @FXML
+    private TextField focusDurationField;
+    @FXML
+    private TextField shortBreakDurationField;
+    @FXML
+    private TextField longBreakDurationField;
+    @FXML
+    private Button saveSettingsButton;
+    
+    
+    @FXML
+    private Button showStatsButton;
 
+    // Todos os nossos serviços
     private TimerService timerService;
-    private Settings currentSettings;
+    private SettingsService settingsService;
+    private TrackingService trackingService;
     private NotificationService notificationService;
+    
+    private Settings currentSettings;
 
     @FXML
     void handleStartButton(ActionEvent event) {
-        // Esta linha é a que estava faltando. Ela inicia o timer.
         timerService.startTimer();
-        updateButtonStates(true); // Atualiza os botões para o estado "rodando"
+        updateButtonStates(true);
     }
 
     @FXML
     void handlePauseButton(ActionEvent event) {
         timerService.pauseTimer();
-        updateButtonStates(false); // Atualiza os botões para o estado "pausado"
+        updateButtonStates(false);
         startButton.setText("Continuar");
     }
 
     @FXML
     void handleResetButton(ActionEvent event) {
         timerService.resetTimer();
-        updateButtonStates(false); // Atualiza os botões para o estado "pronto"
+        updateButtonStates(false);
         startButton.setText("Iniciar");
     }
 
     @FXML
+    void handleSaveSettingsButton(ActionEvent event) {
+        try {
+            int focusDuration = Integer.parseInt(focusDurationField.getText());
+            int shortBreakDuration = Integer.parseInt(shortBreakDurationField.getText());
+            int longBreakDuration = Integer.parseInt(longBreakDurationField.getText());
+
+            currentSettings.setFocusDurationMinutes(focusDuration);
+            currentSettings.setShortBreakDurationMinutes(shortBreakDuration);
+            currentSettings.setLongBreakDurationMinutes(longBreakDuration);
+
+            settingsService.saveSettings(currentSettings);
+
+            timerService.resetTimer();
+            System.out.println("Configurações guardadas e aplicadas!");
+
+        } catch (NumberFormatException e) {
+            System.err.println("Erro: Por favor, insira apenas números nos campos de duração.");
+        }
+    }
+
+    
+    @FXML
+    void handleShowStatsButton(ActionEvent event) {
+        try {
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/moura/jpomo/view/StatsView.fxml"));
+            Parent root = loader.load();
+
+            
+            StatsController statsController = loader.getController();
+            
+            statsController.setTrackingService(trackingService);
+
+            
+            Stage statsStage = new Stage();
+            statsStage.setTitle("Estatísticas de Foco");
+            
+            statsStage.initModality(Modality.APPLICATION_MODAL);
+            statsStage.initStyle(StageStyle.UTILITY);
+
+            Scene scene = new Scene(root);
+            statsStage.setScene(scene);
+            statsStage.showAndWait(); 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void initialize() {
-        // 1. Instancia os serviços
-        this.currentSettings = new Settings(); 
-        this.timerService = new TimerService(currentSettings);
+        this.settingsService = new SettingsService();
+        this.trackingService = new TrackingService();
         this.notificationService = new NotificationService();
 
-        // 2. Conecta (bind) os labels da UI com as propriedades do serviço
+        this.currentSettings = settingsService.loadSettings();
+        
+        populateSettingsFields();
+
+        this.timerService = new TimerService(currentSettings);
+
         timerLabel.textProperty().bind(timerService.formattedTimeProperty());
         statusLabel.textProperty().bind(timerService.statusTextProperty());
 
-        // 3. Adiciona um "ouvinte" para saber quando uma sessão termina
         timerService.sessionFinishedProperty().addListener((obs, oldVal, sessionJustFinished) -> {
             if (sessionJustFinished) {
+                if (timerService.getCurrentState() == TimerState.FOCUS) {
+                    FocusSession session = new FocusSession(currentSettings.getFocusDurationMinutes());
+                    trackingService.addFocusSession(session);
+                }
+                
                 notificationService.playSoundNotification();
                 updateButtonStates(false);
                 startButton.setText("Iniciar");
             }
         });
 
-        // 4. Configura o estado inicial dos botões
         updateButtonStates(false);
     }
 
-    /**
-     * Método auxiliar para centralizar a lógica de habilitar/desabilitar botões.
-     * @param isRunning true se o timer estiver rodando, false caso contrário.
-     */
     private void updateButtonStates(boolean isRunning) {
         startButton.setDisable(isRunning);
         pauseButton.setDisable(!isRunning);
+    }
+
+    private void populateSettingsFields() {
+        focusDurationField.setText(String.valueOf(currentSettings.getFocusDurationMinutes()));
+        shortBreakDurationField.setText(String.valueOf(currentSettings.getShortBreakDurationMinutes()));
+        longBreakDurationField.setText(String.valueOf(currentSettings.getLongBreakDurationMinutes()));
     }
 }

@@ -33,7 +33,6 @@ public class TimerService {
     }
 
     public void startTimer() {
-       
         timeline.stop();
 
         sessionFinished.set(false); // Reseta o gatilho de notificação
@@ -45,7 +44,7 @@ public class TimerService {
             if (remainingSeconds <= 0) {
                 timeline.stop();
                 if (currentState == TimerState.FOCUS) {
-                    focusCyclesCompleted++; 
+                    focusCyclesCompleted++; // Incrementa apenas ao final do foco
                 }
                 sessionFinished.set(true); // Notifica o Controller
                 advanceToNextState();
@@ -109,4 +108,9 @@ public class TimerService {
     public StringProperty formattedTimeProperty() { return formattedTime; }
     public StringProperty statusTextProperty() { return statusText; }
     public BooleanProperty sessionFinishedProperty() { return sessionFinished; }
+    
+    //  Permite que o Controller saiba qual era o estado quando a sessão terminou
+    public TimerState getCurrentState() {
+        return currentState;
+    }
 }
