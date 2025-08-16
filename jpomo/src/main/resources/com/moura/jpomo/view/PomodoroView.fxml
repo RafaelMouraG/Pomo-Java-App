@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Importa as classes de layout e controle do JavaFX que vamos usar -->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- 
+    O elemento raiz é um VBox. Ele organiza seus filhos verticalmente.
+    fx:controller="com.moura.controller.PomodoroController" é a linha crucial
+    que conecta esta View ao nosso Controller.
+-->
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moura.controller.PomodoroController">
+   
+   <!-- Padding interno do VBox -->
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+
+   <!-- Label para mostrar o estado atual (Foco, Pausa, etc.) -->
+   <Label fx:id="statusLabel" text="Pressione Iniciar">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   
+   <!-- Label principal que exibirá o cronômetro -->
+   <Label fx:id="timerLabel" text="25:00">
+      <font>
+         <!-- Uma fonte grande e em negrito para o tempo -->
+         <Font name="System Bold" size="80.0" />
+      </font>
+   </Label>
+   
+   <!-- HBox para organizar os botões horizontalmente -->
+   <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="15.0">
+      <children>
+         <!-- Botão de Iniciar/Continuar -->
+         <Button fx:id="startButton" mnemonicParsing="false" onAction="#handleStartButton" prefHeight="40.0" prefWidth="100.0" text="Iniciar" />
+         
+         <!-- Botão de Pausar -->
+         <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#handlePauseButton" prefHeight="40.0" prefWidth="100.0" text="Pausar" />
+         
+         <!-- Botão de Resetar -->
+         <Button fx:id="resetButton" mnemonicParsing="false" onAction="#handleResetButton" prefHeight="40.0" prefWidth="100.0" text="Resetar" />
+      </children>
+   </HBox>
+
+</VBox>
