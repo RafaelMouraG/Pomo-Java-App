@@ -1,5 +1,8 @@
 package com.moura.model;
 
-public class TimerState {
-    
+
+public enum TimerState {
+    FOCUS,
+    SHORT_BREAK,
+    LONG_BREAK
 }
