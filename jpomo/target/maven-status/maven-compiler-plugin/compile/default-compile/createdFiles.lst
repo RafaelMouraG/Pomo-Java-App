@@ -1,1 +1,13 @@
+com\moura\service\NotificationService.class
+com\moura\model\FocusSession.class
+com\moura\model\TimerState.class
+com\moura\service\TrackingService.class
+com\moura\service\TimerService.class
+com\moura\App.class
 com\moura\service\TimerService$1.class
+com\moura\service\SettingsService.class
+com\moura\service\TrackingService$1.class
+com\moura\Launcher.class
+com\moura\model\Settings.class
+com\moura\controller\StatsController.class
+com\moura\controller\PomodoroController.class
