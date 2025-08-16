@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -43,11 +44,19 @@ public class App extends Application {
                  System.out.println("Aviso: Arquivo styles.css não encontrado. A aplicação funcionará sem estilização customizada.");
             }
 
-            // 4. Configura o palco (a janela principal).
+
+             try {
+                Image appIcon = new Image(Objects.requireNonNull(App.class.getClassLoader().getResourceAsStream("com/moura/jpomo/view/icon.png")));
+                primaryStage.getIcons().add(appIcon);
+            } catch (Exception e) {
+                System.err.println("Aviso: Ficheiro icon.png não encontrado. A aplicação irá usar o ícone padrão.");
+            }
+
+            
             primaryStage.setTitle("JPomo - Seu Timer Pomodoro");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false); // Impede que o usuário redimensione a janela.
-            primaryStage.show(); // Exibe a janela para o usuário.
+            primaryStage.setResizable(false); 
+            primaryStage.show(); 
 
         } catch (IOException e) {
             // Em caso de erro ao carregar o FXML, imprime o erro.
@@ -61,6 +70,8 @@ public class App extends Application {
             e.printStackTrace();
         }
     }
+
+    
 
     /**
      * O método main é usado para lançar a aplicação.
