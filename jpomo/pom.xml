@@ -4,13 +4,80 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Informações básicas do seu projeto -->
     <groupId>com.moura</groupId>
     <artifactId>jpomo</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Propriedades para centralizar as versões -->
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>21</maven.compiler.source> <!-- ATUALIZADO para sua versão do Java -->
+        <maven.compiler.target>21</maven.compiler.target> <!-- ATUALIZADO para sua versão do Java -->
+        <javafx.version>21.0.3</javafx.version> <!-- ATUALIZADO para ser compatível com o Java 21 -->
     </properties>
 
+    <!-- Aqui listamos todas as bibliotecas externas que o projeto precisa -->
+    <dependencies>
+        <!-- Dependência principal para os controles do JavaFX (botões, labels, etc.) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- Dependência para carregar os arquivos FXML (nossa View) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        
+        <!-- Dependência para tocar áudio (notificação sonora) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- Biblioteca do Google para trabalhar com JSON (salvar/carregar dados) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Configurações de como o Maven deve construir o projeto -->
+    <build>
+        <plugins>
+            <!-- Plugin para compilar o código Java -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version> <!-- Versão mais recente para melhor compatibilidade com Java 21 -->
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin ESSENCIAL para rodar e empacotar aplicações JavaFX -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running with: mvn javafx:run -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <!-- A classe principal que inicia a aplicação -->
+                            <mainClass>com.moura.App</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
