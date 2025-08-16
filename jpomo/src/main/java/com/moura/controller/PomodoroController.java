@@ -43,7 +43,7 @@ public class PomodoroController {
     @FXML
     private Button saveSettingsButton;
     
-    // Referência para o botão de estatísticas
+    
     @FXML
     private Button showStatsButton;
 
@@ -96,29 +96,29 @@ public class PomodoroController {
         }
     }
 
-    // O método que estava a faltar
+    
     @FXML
     void handleShowStatsButton(ActionEvent event) {
         try {
-            // 1. Cria um loader para o FXML da janela de estatísticas
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/moura/jpomo/view/StatsView.fxml"));
             Parent root = loader.load();
 
-            // 2. Obtém a instância do StatsController que o loader criou
+            
             StatsController statsController = loader.getController();
-            // 3. Passa a nossa instância do TrackingService para ele
+            
             statsController.setTrackingService(trackingService);
 
-            // 4. Cria uma nova janela (Stage) para mostrar a cena
+            
             Stage statsStage = new Stage();
             statsStage.setTitle("Estatísticas de Foco");
-            // Modality.APPLICATION_MODAL impede o utilizador de interagir com a janela principal enquanto esta estiver aberta
+            
             statsStage.initModality(Modality.APPLICATION_MODAL);
-            statsStage.initStyle(StageStyle.UTILITY); // Estilo mais simples para a janela
+            statsStage.initStyle(StageStyle.UTILITY);
 
             Scene scene = new Scene(root);
             statsStage.setScene(scene);
-            statsStage.showAndWait(); // Mostra a janela e espera que ela seja fechada
+            statsStage.showAndWait(); 
 
         } catch (IOException e) {
             e.printStackTrace();

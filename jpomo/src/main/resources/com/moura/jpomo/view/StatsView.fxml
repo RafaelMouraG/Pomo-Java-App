@@ -21,7 +21,7 @@
          </font>
       </Label>
       
-      <!-- LAYOUT CORRIGIDO: Um VBox para empilhar as linhas de estatísticas -->
+      
       <VBox alignment="CENTER" spacing="10.0">
          <children>
             <!-- Linha para "Hoje" -->
